@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .login-container {
+            text-align: center;
+            background: #fffbfb;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            transition: transform 0.5s ease-in-out;
+        }
+        .login-container.slide-up {
+            transform: translateY(-100px);
+        }
+        input:focus + .login-container {
+            transform: translateY(-25px);
+            color: #0051ff;
+        }
+        input:focus {
+            border-color: #0051ff;
+        }
+        .container {
+            display: none;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff6666;
+        }
+        header {
+            padding: 20px;
+            background-color: #ffcccc;
+            border-radius: 10px;
+        }
+        header h1 {
+            color: #ff6666;
+        }
+        header p {
+            color: #cc0000;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffcccc;
+            border-radius: 10px;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #ff6666;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        nav a:hover {
+            background-color: #cc0000;
+            transform: scale(1.1);
+        }
+        section {
+            display: none;
+        }
+        section.active {
+            display: block;
+        }
+        /* Musik Player Styling */
+        .music-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .music-carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .music-carousel button {
+            font-size: 24px;
+            background-color: #ff6666;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+        .music-carousel button:hover {
+            background-color: #cc0000;
+        }
+        .music-info {
+            max-width: 300px;
+            text-align: center;
+        }
+        .music-info h3 {
+            color: #ff6666;
+        }
+        audio {
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+        }
+        .gallery img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        let currentAlbumIndex = 0;
+        const musicList = [
+            { name: "Bruno Mars - Grenade", src: "Bruno Mars - Grenade (Lyrics).mp3" },
+            { name: "Bruno Mars - Just The Way You ", src: "Bruno Mars - Just The Way You Are.mp3" },
+            { name: "Bruno Mars - Talking To The Moon ", src: "Bruno Mars - Talking To The Moon (Lyrics).mp3" },
+            { name: "Bruno Mars - When I Was Your Man", src: "Bruno Mars - When I Was Your Man.mp3" },
+            { name: "Bruno Mars - Locked Out of Heaven ", src: "Locked Out of Heaven - Bruno Mars (Lyrics) 🎵.mp3" },
+
+            
+        ];
+        function checkUsername() {
+            const username = document.getElementById('username').value;
+            const errorMessage = document.getElementById('errorMessage');
+            if (username.trim() === '') {
+                errorMessage.textContent = 'Nama tidak boleh kosong';
+                return;
+            }
+            if (
+    username === 'FELITA DAVIANTI' ||
+    username === 'felita davianti' ||
+    username === 'Felita davianti' ||
+    username === 'Felita Davianti'
+) {
+    alert('Halo! Selamat datang!');
+    document.querySelector('.login-container').classList.add('slide-up');
+    setTimeout(() => {
+        document.querySelector('.login-container').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
+        document.querySelector('header h1').textContent = `Selamat Ulang Tahun, ${username}!`;
+    }, 500); // Delay to match the animation duration
+} else {
+    errorMessage.textContent = 'kamu siapa? web ini bukan untukmu';
+}
+
+        }
+        function showContent(id) {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+        function updateMusic() {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const musicName = document.getElementById('musicName');
+            audioPlayer.src = musicList[currentAlbumIndex].src;
+            musicName.textContent = musicList[currentAlbumIndex].name;
+            audioPlayer.play();
+        }
+        function prevMusic() {
+            currentAlbumIndex = (currentAlbumIndex - 1 + musicList.length) % musicList.length;
+            updateMusic();
+        }
+        function nextMusic() {
+            currentAlbumIndex = (currentAlbumIndex + 1) % musicList.length;
+            updateMusic();
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.login-container').style.display = 'block';
+            document.querySelector('.container').style.display = 'none';
+            updateMusic();
+        });
+    </script>
+</head>
+<body>
+    <!-- Bagian Login -->
+    <div class="login-container">
+        <h1>Masukkan Namamu</h1>
+        <label for="username">Nama:</label>
+        <input type="text" id="username" placeholder="Masukkan Nama Lengkap" />
+        <button onclick="checkUsername()">Masuk</button>
+        <p class="error" id="errorMessage"></p>
+    </div>
+    <!-- Bagian Konten Utama (setelah login) -->
+    <div class="container">
+        <!-- Bagian Header -->
+        <header>
+            <h1>🌼💫Selamat Ulang Tahun, [Nama Temanmu]✨🥳</h1>
+            <p>happy birthday ileff hari ini hari spesialnya ileff🥳, yahh aku ketinggalan lagii ya felii, kamu sudaa 17 aku masii 16 yahh, kamu napaa gaa nunguin gueh sihh, wkwk, eh udah 17 yaa, beratii bikin ktp dongg, OMG bolee spill kalii ntar foto ktpnyaa, ahaha, fel felii, kamuu ngga lupa kann ma aku?? Apa malah lupaa, yahh, mogaa tidaa deh, hehe, kaalo lupaa, biarkan ku perkenalkan dirii lagii, ekhemm, nama gueh fakhri akmaludin, kelas sbelah kelasnya felita davianti, tau feli ga kamu?? Kalo gatau carii tau sendiri yaw, oke lanjut perkenalan, umur 20 kurang dikitt, hobi epep, emm apalagi yah, gatauu perkenalann apalagi hehe, ihh inget yaa fell biar akuu gaaharus bingungg perkenalannya, wkwk suda sudaa malah perkenalan, kamuu kaget tidaa aku buat begini, eh aku ini ya buatnyaa baru belajarr, jadi kalo jeleg maap maap yaw, hehe</p>
+        </header>
+        <!-- Navigasi -->
+        <nav>
+            <a href="#" onclick="showContent('stories')">Cerita Singkat</a>
+            <a href="#" onclick="showContent('messages')">kata-kata</a>
+            <a href="#" onclick="showContent('gallery')">Galeri Foto</a>
+        </nav>
+        <!-- Bagian Cerita -->
+        <section id="stories">
+            <h2>Cerita Singkat</h2>
+            <blockquote> mau critaa dikitt fell, hehe eh kamu tau gaa, katamu kan gapernah ketemu ma orang sopspoken kann, akuu kemaren ketemuu tauu, jadi kan aku cukur yaa, nah tukang cukurnyaa tuu ngomongnya lemah lembut bangett, wkwk, mana jadi ga kedengeran, sop spken sii saking soft nyaa sampe aku gaa kedengeran, truss ya felii, aku pernah yaa ke gombongg, eh liat adaa orang lucuu nan imutt, ngga tauu siapa sih ituu, kayanya inisialnya felita davianti, hihi,fel felii jujur ni yaa akuu GA kangen kangen lagi maa kamuu, KEREN KANN, aku? kangenn? GAA kangenn banget laa, kamu kaloo kangen yagapapaa fell, wkwk, eh kamuu masihh di misii gasukaa sama siapa siapaa yaa, mangat mangatt, akupunn aku GA suka ma siapa siapaa, YAGAA lef, hihi, emm pengen critaa banyak banyakk sii, tapi tidaa memungkinkann, huhu, GA sedihh, emm feli feli, kamuu jaga healtymuu yaaa, emm mungkinn gituu aja cerita ceritanyaa,nah kalo aku bikin ginian kamuu tida perlu jawabb, emm maapp kaloo masih jeleg yaa buatnyaa, besok besok kaloo sudah bisa ku kasi liatt dehh, hihi, emm babaii ileff, aku GAA kangenn, GAA sukaa siapa siapaa jugaa,huhu farenn kangen, gue kangen faren loo yaa, hehe, yasudaa dehh,selamatt harii felii, felitaa, babaiii daviii😁</blockquote>
+            <p>SELAMAT HARI FELII</p>
+        </section>
+        <!-- Bagian Pesan -->
+        <section id="messages" class="active">
+            <h2>My Wish</h2>
+            <p>TERUNTUk ILEF or DAVI or DAVIILEF semogaa pajang umurnyaa, sehat always, rejekinya mengalir derass ,dimuluskan segala urusannya ilef, always selalu semangatt 45, selalu dikelilingi orang baik,feli tambah lucuu, eh emang udah lucu sihh dari sananyaa, yaa tambah tambahh lagii, semoga di umur yg ke (18 mod 7)4 +1, ( wkwk itung sendiri yaw) ini dan seterusnya lebih lebih baikk, semoga yaallah, semogaa mimpi ilef terwujud, semua yang kamu harapkan terkabuldan bisa dapetin apa yang kamu perjuangin, semoga yang disemogakan tersemogakan, aamiin….</p>
+        </section>
+         <!-- Bagian Galeri -->
+         <section id="gallery">
+            <h2>Galeri Foto</h2>
+            <p>Foto-fotonyaa ileff</p>
+            <div class="gallery">
+                <img src="1.jpg" alt="Foto 1">
+                <img src="4.jpg" alt="Foto 2">
+                <img src="3.jpg" alt="Foto 3">
+            </div>
+        </section>
+        <!-- Bagian Pemutar Musik dengan Swipe -->
+        <div class="music-container">
+            <h2>Pilih Lagu</h2>
+            <div class="music-carousel">
+                <button onclick="prevMusic()">&#8592;</button>
+                <div class="music-info">
+                    <h3 id="musicName"></h3>
+                    <audio id="audioPlayer" controls></audio>
+                </div>
+                <button onclick="nextMusic()">&#8594;</button>
+            </div>
+        </div>
+        <footer>
+            <p1> for anaknya pak amir </p1>
+            <p> Made by love, for love🤍 </p>
+        </footer>
+    </div>
+</body>
+</html>
